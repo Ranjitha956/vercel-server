@@ -1,24 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const Employee = require('./model/Employee'); // ✅ Ensure this path and file exists
+const Employee = require('./model/Employee');
 
 const app = express();
-
-// Middleware
 app.use(cors());
-app.use(express.json()); // Handles JSON form data
-app.use(express.urlencoded({ extended: true })); // Handles form-urlencoded data (optional if using JSON)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/employee_db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('✅ MongoDB connected'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// MongoDB Atlas connection
+mongoose.connect(
+  'mongodb+srv://user1:ninja34r5r764@cluster0.0bthphz.mongodb.net/employee_db?retryWrites=true&w=majority&appName=Cluster0',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+)
+.then(() => console.log('✅ MongoDB Atlas connected'))
+.catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// POST: Add a new employee
+// POST route to save employee
 app.post('/employees', async (req, res) => {
   try {
     const employee = new Employee(req.body);
@@ -30,7 +31,7 @@ app.post('/employees', async (req, res) => {
   }
 });
 
-// GET: Fetch all employees
+// GET route to fetch all employees
 app.get('/employees', async (req, res) => {
   try {
     const employees = await Employee.find();
@@ -42,6 +43,7 @@ app.get('/employees', async (req, res) => {
 });
 
 // Start server
-app.listen(5000, () => {
-  console.log('🚀 Server running at http://localhost:5000');
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
